@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<style>
+			body {
+				background-color: green;
+			}
+		
+			span {
+				display: inline-block;
+				width: 100px;
+				height: 100px;
+				background-color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Gioco dell'Oca!</h1>
+		<p>
+			<span id="cella0"></span>
+			<span id="cella1"></span>
+		</p>
+		<p>
+			<span id="cella2"></span>
+			<span id="cella3"></span>
+			<span id="cella4"></span>
+			<span id="cella5"></span>
+			<span id="cella6"></span>
+			<span id="cella7"></span>
+			<span id="cella8"></span>
+		</p>
+		<p>
+			<span id="cella9"></span>
+			<span id="cella10"></span>
+			<span id="cella11"></span>
+		</p>
+		<p>
+			<button onclick="Manche()">lancia</button>
+		</p>
+		<script>
+			var posizione = 0;
+			var posizionePC = 0;
+			var percorso = [0, 3, -2, 0, 0, 2, -3, 0, 0, -1, -6, 0];
+			
+			function Manche(){
+				TurnoMio();
+				TurnoPC();
+			}
+			
+			function TurnoMio(){
+				// lancio dado [0->5]+1
+				var dado = Math.floor(Math.random() * 6) + 1;
+				var nuovaPosizione = posizione + dado;
+				if(nuovaPosizione > 11){
+					nuovaPosizione = 11 - (nuovaPosizione - 11);
+				}
+				// trovo la penalità e aggiorno
+				var penalità = percorso[nuovaPosizione];
+				nuovaPosizione = nuovaPosizione + penalità;
+				// comunico all'utente dove si trova
+				var vecchia = document.getElementById("cella" + posizione);
+				vecchia.innerText = "";
+				var nuova = document.getElementById("cella" + nuovaPosizione);
+				nuova.innerText = "U";
+				// aggiorno la posizione così da ricordare
+				posizione = nuovaPosizione;
+				if(posizione == 11)
+					alert("Hai vinto!");
+			}
+			
+			function TurnoPC(){
+				// lancio dado [0->5]+1
+				var dado = Math.floor(Math.random() * 6) + 1;
+				var nuovaPosizione = posizionePC + dado;
+				if(nuovaPosizione > 11){
+					nuovaPosizione = 11 - (nuovaPosizione - 11);
+				}
+				// trovo la penalità e aggiorno
+				var penalità = percorso[nuovaPosizione];
+				nuovaPosizione = nuovaPosizione + penalità;
+				// comunico all'utente dove si trova
+				var vecchia = document.getElementById("cella" + posizionePC);
+				vecchia.innerText = "";
+				var nuova = document.getElementById("cella" + nuovaPosizione);
+				if(nuovaPosizione == posizione)
+					nuova.innerText = "P,U";
+				else
+					nuova.innerText = "P";
+				// aggiorno la posizione così da ricordare
+				posizionePC = nuovaPosizione;
+				if(posizionePC == 11)
+					alert("Ha vinto il pc...");
+			}
+		</script>
+	</body>
+</html>

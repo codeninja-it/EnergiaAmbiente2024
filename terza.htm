@@ -1,0 +1,25 @@
+<html>
+	<script>
+		var base = prompt("che tabellina vuoi?");
+		var volte = prompt("quante volte ripeto?");
+		var moltiplica = prompt("moltiplico?");
+		var n = 0;
+		var risposta = "";
+		do
+		{
+			if(moltiplica == "si")
+			{
+				risultato = base * n;
+				risposta = risposta + base + " X " + n + " = " + risultato + "\n";
+			}
+			else
+			{
+				risultato = base / n;
+				risposta = risposta + base + " : " + n + " = " + risultato + "\n";
+			}
+			n = n + 1;
+		}
+		while(n < volte);
+		alert(risposta);
+	</script>
+</html>

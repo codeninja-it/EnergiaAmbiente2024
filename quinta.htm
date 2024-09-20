@@ -1,0 +1,30 @@
+<html>
+	<script>
+	
+		var sceltaUtente = prompt("cosa hai buttato?");
+		// estraggo un numero casuale
+		var numero = Math.random(); // n * 3
+		// a quale oggetto equivale?
+		numero = numero * 3;
+		// ma lo voglio chiaro!!!
+		numero = Math.round(numero);
+		var sceltaPC = "";
+		if(numero == 0)
+			sceltaPC = "sasso";
+		else if (numero == 1)
+			sceltaPC = "carta";
+		else
+			sceltaPC = "forbice";
+		// visto che so cosa ha estratto il pc e so cosa ha estratto l'utente
+		alert("io invece " + sceltaPC);
+		// li uso
+		if (sceltaUtente == "sasso" && sceltaPC == "forbice")
+			alert("Hai vinto!");
+		else if (sceltaUtente == "carta" && sceltaPC == "sasso")
+			alert("Hai vinto!");
+		else if (sceltaUtente == "forbice" && sceltaPC == "carta")
+			alert("Hai vinto!");
+		else
+			alert("Hai perso!");
+	</script>
+</html>

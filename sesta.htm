@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<style>
+			body {
+				font-family: verdana;
+				background-color: #d9ebd5;
+			}
+			
+			h1 {
+				background-color: lightgrey;
+				padding: 10px;
+				box-shadow: 5px 5px 5px black;
+				color: white;
+				font-size: 24pt;
+			}
+			
+			button {
+				width: 100px;
+				height: 100px;
+				margin: 25px;
+				box-shadow: 2px 2px 5px black;
+			}
+			
+			span {
+				padding: 5px;
+				box-shadow: 2px 2px 2px grey inset;
+			}
+			
+			div {
+				background-color: white;
+				padding: 10px;
+				margin: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Sasso carta forbice!</h1>
+		<p>clicca sulla tua scelta per vedere se hai vinto!</p>
+		<p align="center">
+			<button onclick="Manche('sasso')">sasso</button>
+			<button onclick="Manche('carta')">carta</button>
+			<button onclick="Manche('forbice')">forbice</button>
+		</p>
+		<p align="center">
+			<span id="risultatoUtente">12</span>
+			VS
+			<span id="risultatoPC">3</span>
+		</p>
+		<div>
+			Utente: <span id="punteggioUtente">-</span>
+			PC: <span id="punteggioPC">-</span>
+		</div>
+		<script>
+			// inizializzo i punteggi
+			var lblUtente = document.getElementById("risultatoUtente");
+			var lblPC = document.getElementById("risultatoPC");
+			lblUtente.innerText = 0;
+			lblPC.innerText = 0;
+			var puntiUtente = 0;
+			var puntiPC = 0;
+			
+			function Manche(estrattoUtente){
+				console.log("l'utente dice " + estrattoUtente);
+				lblUtente.innerText = estrattoUtente;
+				var numeroPC = Math.floor( Math.random() * 3 ); //0,1,2
+				var possibilità = ["sasso", "carta", "forbice"];
+				var estrattoPC = possibilità[numeroPC];
+				console.log("il pc invece dice " + estrattoPC);
+				lblPC.innerText = estrattoPC;
+				if(estrattoUtente == "forbice" && estrattoPC == "carta"){
+					// vince utente
+					console.log("vince l'utente!");
+					puntiUtente = puntiUtente + 1;
+				} else if (estrattoUtente == "sasso" && estrattoPC == "forbice"){
+					// vince utente
+					console.log("vince l'utente!");
+					puntiUtente = puntiUtente + 1;
+				} else if (estrattoUtente == "carta" && estrattoPC == "sasso"){
+					// vince utente
+					console.log("vince l'utente!");
+					puntiUtente = puntiUtente + 1;
+				} else {
+					// vince pc
+					console.log("vince il pc!");
+					puntiPC = puntiPC + 1;
+				}
+				
+				document.getElementById("punteggioUtente").innerText = puntiUtente;
+				document.getElementById("punteggioPC").innerText = puntiPC;
+			}
+		</script>
+	</body>
+</html>

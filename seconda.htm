@@ -1,0 +1,29 @@
+<html>
+	<body>
+		<h1>Seconda App</h1>
+		<p>Esempio di un generatore di tabelline dove l'utente sceglie anche quante ne vuole</p>
+		<script>
+			// mi faccio dare le informazioni
+			var base = prompt("Che tabellina vuoi?");
+			var volte = prompt("per quante volte?");
+			// in fase iniziale imposto da quanto voglio partire
+			var numero = 0;
+			var risposta = "";
+			// fino a che sto sotto alle volte previste
+			var controllo = false;
+			while(controllo)
+			{
+				controllo = numero < volte;
+				// aumento il valore di numero
+				numero = numero + 1;
+				// calcolo il risultato
+				var risultato = base * numero;
+				// e lo uso per forgiare la risposta
+				// es. : "2 X 4 = 8"
+				risposta = risposta + base + " X " + numero + " = " + risultato + "\n";
+			}
+			// per poi inviarla all'utente
+			alert(risposta);
+		</script>
+	</body>
+</html>
