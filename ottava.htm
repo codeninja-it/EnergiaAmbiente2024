@@ -1,20 +1,52 @@
 <html>
 	<head>
-		<style></style>
+		<style>
+			body {
+				font-family: Arial;
+				background-color: #f9f9f9;
+				color: #222222;
+			}
+			
+			#lblNome {
+				background-color: #2222f9;
+				color: white;
+				font-size: 24pt;
+				padding: 15px;
+			}
+			
+			#lblDescrizione {
+				vertical-align: top;
+				padding: 15px;
+			}
+			
+			#imgProdotto {
+				box-shadow: 2px 2px 2px grey;
+			}
+			
+			#lblPrezzo, #lblCategoria {
+				background-color: #2222f0;
+				color: white;
+				padding: 10px;
+				text-align: right;
+			}
+		</style>
 	</head>
 	<body>
-		<table border=1 width="100%" height="100%">
+		<table width="100%" height="100%">
 			<tr height="1%">
 				<td colspan=2 id="lblNome">Nome del prodotto</td>
 			</tr>
 			<tr>
-				<td rowspan=2 width="80%" id="lblDescrizione">descrizione</td>
+				<td rowspan=3 width="80%" id="lblDescrizione">descrizione</td>
 				<td>
 					<img id="imgProdotto" width="150px" src="" />
 				</td>
 			</tr>
 			<tr height="1%">
 				<td align="right" id="lblPrezzo">prezzo</td>
+			</tr>
+			<tr height="1%">
+				<td id="lblCategoria"></td>
 			</tr>
 			<tr>
 				<td height="1%" colspan=2 align="center">
@@ -33,19 +65,22 @@
 					"Marmitta Polini", 
 					"marmitta da corsa ad alte prestazione",
 					"https://th.bing.com/th/id/OIP.GfEnHYfH0Th_tfJox5S0tgHaFl?rs=1&pid=ImgDetMain",
-					350
+					350,
+					"moto"
 				], 
 				[// sedile da corsa
 					"Sedile da corsa Sparco",
 					"sedile da corsa installabile su tutti i veicoli",
 					"https://th.bing.com/th/id/R.938c61b4f8b1286ec9e0930edd28e9a1?rik=1ap2%2b%2f6wYI%2f8ig&pid=ImgRaw&r=0",
-					800
+					800,
+					"macchina"
 				],
 				[// fari xeno
 					"Fari allo xeno",
 					"Kit per fari ad alta intensità",
 					"https://th.bing.com/th/id/R.b138dd38083829d3344c7aacea78a79a?rik=v0s6QRpbfh2yVw&pid=ImgRaw&r=0",
-					25
+					25,
+					"macchina"
 				]
 			];
 		
@@ -64,6 +99,9 @@
 				// cambio anche il prezzo
 				var prezzo = document.getElementById("lblPrezzo");
 				prezzo.innerText = prodotto[3];
+				// cambio anche la categoria
+				var categoria = document.getElementById("lblCategoria");
+				categoria.innerText = prodotto[4];
 			}
 			
 			var prodottoVisibile = 0;
