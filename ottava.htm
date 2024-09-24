@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<style>
 			body {
 				font-family: Arial;
@@ -56,7 +57,33 @@
 			</tr>
 		</table>
 		
-		
+		<table>
+			<tr>
+				<td>Nome</td>
+				<td> <input type="text" id="txtNome" > </td>
+			</tr>
+			<tr>
+				<td>Descrizione</td>
+				<td> <input type="text" id="txtDescrizione"> </td>
+			</tr>
+			<tr>
+				<td>Immagine</td>
+				<td> <input type="text" id="txtUrl"> </td>
+			</tr>
+			<tr>
+				<td>Prezzo</td>
+				<td> <input type="number" id="txtPrezzo"> </td>
+			</tr>
+			<tr>
+				<td>Categoria</td>
+				<td> <input type="text" id="txtCategoria"> </td>
+			</tr>
+			<tr>
+				<td colspan="2"> 
+					<button onclick="CreaProdotto()">salva</button>
+				</td>
+			</tr>
+		</table>
 		
 		<script>
 		
@@ -83,6 +110,39 @@
 					"macchina"
 				]
 			];
+			
+			function CreaProdotto() {
+				// mi connetto ai campi dove l'utente ha scritto
+				var campoNome = document.getElementById("txtNome");
+				var campoDescrizione = document.getElementById("txtDescrizione");
+				var campoImmagine = document.getElementById("txtUrl");
+				var campoPrezzo = document.getElementById("txtPrezzo");
+				var campoCategoria = document.getElementById("txtCategoria");
+				if(campoNome.value != "" && 
+					campoDescrizione.value != "" && 
+					campoImmagine.value != "" && 
+					campoPrezzo.value != "" &&
+					campoCategoria.value != "") {
+					// costruisco un nuovo prodotto
+					var nuovo = [
+									campoNome.value,
+									campoDescrizione.value,
+									campoImmagine.value,
+									campoPrezzo.value,
+									campoCategoria.value
+								];
+					// lo aggiungo al catalogo
+					catalogo.push(nuovo);
+					// e svuoto i miei campi
+					campoNome.value = "";
+					campoDescrizione.value = "";
+					campoImmagine.value = "";
+					campoPrezzo.value = "";
+					campoCategoria.value = "";
+				} else {
+					alert("devi riempire tutti i campi!!!");
+				}
+			}
 		
 			function CaricaProdotto(numeroProdotto){
 				// recupero il prodotto che vuole l'utente
@@ -93,7 +153,7 @@
 				// cambio la descrizione
 				var descrizione = document.getElementById("lblDescrizione");
 				descrizione.innerText = prodotto[1];
-				// cambio l'immagine
+				// cambio l'immagine
 				var immagine = document.getElementById("imgProdotto");
 				immagine.src = prodotto[2];
 				// cambio anche il prezzo
