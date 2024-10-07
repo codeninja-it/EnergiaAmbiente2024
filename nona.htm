@@ -53,6 +53,9 @@
 					<p>
 						<input type="color" id="txtColore" />
 					</p>
+					<p>
+						<input id="txtSfondo" placeholder="url sfondo..." />
+					</p>
 					<button onclick="inserisci()">inserisci</button>
 				</td>
 			</tr>
@@ -79,7 +82,11 @@
 				var buffer = "";
 				while(n < archivio.length){
 					var postit = archivio[n];
-					buffer += "<div style='background-color: " + postit[2] + "'>";
+					var cssAggiuntivo = "";
+					if(postit.length == 4) {
+						cssAggiuntivo = "background-image: url(" + postit[3] + ")";
+					}
+					buffer += "<div style='background-color: " + postit[2] + ";" + cssAggiuntivo + "'>";
 						buffer += "<h5>" + postit[0] + "</h5>";
 						buffer += "<p>" + postit[1] + "</p>";
 						buffer += "<button onclick='Cancella(" + n + ")'>cancella</button>";
@@ -96,11 +103,13 @@
 				var txtTitolo = document.getElementById("txtTitolo");
 				var txtTesto = document.getElementById("txtTesto");
 				var txtColore = document.getElementById("txtColore");
+				var txtSfondo = document.getElementById("txtSfondo");
 				// creo un nuovo post
 				var nuovo = [
 					txtTitolo.value,
 					txtTesto.value,
-					txtColore.value
+					txtColore.value,
+					txtSfondo.value		// [3] url dell'immagine
 				];
 				// lo aggiungo in archivio
 				archivio.push(nuovo);
@@ -117,6 +126,7 @@
 				txtTitolo.value = "";
 				txtTesto.value = "";
 				txtColore.value = "";
+				txtSfondo.value = "";
 			}
 			
 			function Cancella(daCancellare){
