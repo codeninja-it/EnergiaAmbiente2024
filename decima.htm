@@ -12,8 +12,44 @@
 		<canvas width="500px" height="500px" id="lavagna"></canvas>
 		
 		<script>
-			// ricordandomi un punto che rappresenta la posizione precedente del mouse;
+			function disegnaLinea(destinazione, colore){
+				penna.strokeStyle = colore;
+				penna.beginPath();
+					penna.moveTo(puntoPrecedente[0], puntoPrecedente[1]);
+					penna.lineTo(destinazione.clientX, destinazione.clientY);
+				penna.stroke();
+				arima(20);
+			}
+			
+			function arima(quanti){
+				if(punti.length > quanti){
+					var coda = punti.slice(0 - quanti);
+					var x = 0;
+					var y = 0;
+					var n = 0;
+					while(n < quanti){
+						var posizione = coda[n];
+						if(posizione != null){
+							x = x + posizione[0];
+							y = y + posizione[1];
+						}
+						n = n + 1;
+					}
+					x = x / quanti;
+					y = y / quanti;
+					penna.strokeStyle = "red";
+					penna.beginPath();
+						penna.moveTo(x, y-2);
+						penna.lineTo(x, y);
+					penna.stroke();
+				}
+			}
+		
+			// ricordandomi un punto che rappresenta la posizione
+			// precedente del mouse;
 			var puntoPrecedente = null;
+			// e lo storico dei punti su cui ho disegnato
+			var punti = [];
 			// prendo il riferimento al target
 			var target = document.getElementById("lavagna");
 			// mi costruisco una penna per disegnare
@@ -32,30 +68,25 @@
 				// e coloro il pixel alle coordinate dove ci troviamo
 				// se il pulsante sinistro del mouse è premuto
 				if(circostanza.buttons == 1){
-					if(puntoPrecedente == null){
-						// imposto nel punto precedente
-						// la posizione attuale
-						puntoPrecedente = [circostanza.clientX, circostanza.clientY];
-					} else {
-						// devo disegnare la linea dal punto
+					// e se ho un punto precedente
+					if(puntoPrecedente != null){
+						// posso disegnare la linea dal punto
 						// precedente alla posizione attuale
-						penna.beginPath();
-							penna.moveTo(puntoPrecedente[0], puntoPrecedente[1]);
-							penna.lineTo(circostanza.clientX, circostanza.clientY);
-						penna.stroke();
-						// e impostare la posizione precedente all'attuale
-						puntoPrecedente = [circostanza.clientX, circostanza.clientY];
+						disegnaLinea(circostanza, "blue");
 					}
+					// e impostare la posizione precedente all'attuale
+					puntoPrecedente = [circostanza.clientX, circostanza.clientY];
+					// per averne memoria futura
+					punti.push(puntoPrecedente);
 				} else {
 					if(puntoPrecedente != null){
 						// devo disegnare una linea dal punto 
 						// precedente alla posizione attuale
-						penna.beginPath();
-							penna.moveTo(puntoPrecedente[0], puntoPrecedente[1]);
-							penna.lineTo(circostanza.clientX, circostanza.clientY);
-						penna.stroke();
+						disegnaLinea(circostanza, "red");
 						// e svuoto il vecchio punto perchè ho alzato la penna
 						puntoPrecedente = null;
+						// per averne memoria
+						punti.push(puntoPrecedente);
 					}
 				}
 			};
