@@ -3,22 +3,45 @@
 		<title>Paint!</title>
 		<meta charset="utf-8" />
 		<style>
-			#lavagna{
-				border: solid 1px black;
+			body {
+				background-color: wheat;
+				font-family: Arial;
+				text-align: center;
+			}
+			
+			h1, p {
+				text-align: left;
+			}
+			
+			input {
+				width: 50%;
+				margin-bottom: 15px;
+			}
+			
+			#lavagna {
+				box-shadow: 5px 5px 5px black;
+				background-color: white;
 			}
 		</style>
 	</head>
 	<body>
-		<canvas width="500px" height="500px" id="lavagna"></canvas>
+		<h1>Arima</h1>
+		<p>
+			esempio di uso della media ad inseguimento per evidenziare<br>
+			differenze dalla normalità di un segnale.
+		</p>
+		<input type="number" id="arima" value=20 />
+		<canvas width="900px" height="500px" id="lavagna"></canvas>
 		
 		<script>
 			function disegnaLinea(destinazione, colore){
 				penna.strokeStyle = colore;
 				penna.beginPath();
 					penna.moveTo(puntoPrecedente[0], puntoPrecedente[1]);
-					penna.lineTo(destinazione.clientX, destinazione.clientY);
+					penna.lineTo(destinazione.offsetX, destinazione.offsetY);
 				penna.stroke();
-				arima(20);
+				var livelloArima = document.getElementById("arima");
+				arima(livelloArima.value);
 			}
 			
 			function arima(quanti){
@@ -56,16 +79,7 @@
 			var penna = target.getContext("2d");
 			// e ne gestisco gli eventi
 			target.onmousemove = function(circostanza){
-				// tutte le volte che il mouse si muove
-				// pulisco la console
-				console.clear();
-				// ci scrivo le coordinate del mouse
-				console.log(
-							circostanza.clientX + " " + 
-							circostanza.clientY + " " +
-							circostanza.buttons
-							);
-				// e coloro il pixel alle coordinate dove ci troviamo
+				// coloro il pixel alle coordinate dove ci troviamo
 				// se il pulsante sinistro del mouse è premuto
 				if(circostanza.buttons == 1){
 					// e se ho un punto precedente
@@ -75,7 +89,7 @@
 						disegnaLinea(circostanza, "blue");
 					}
 					// e impostare la posizione precedente all'attuale
-					puntoPrecedente = [circostanza.clientX, circostanza.clientY];
+					puntoPrecedente = [circostanza.offsetX, circostanza.offsetY];
 					// per averne memoria futura
 					punti.push(puntoPrecedente);
 				} else {
