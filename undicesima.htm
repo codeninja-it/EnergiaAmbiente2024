@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			table {
+				width: 100%;
+			}
+			
+			#totale {
+				text-align: right;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>PERT</h1>
+		<p>calcolatrice di costi di progetto basata sulla Project Evaluation and Review Technique</p>
+		<p>
+			Stipendio atteso<input id="txtStipendio" type="number" value="1400" onchange="AggiornaTabella(progetto2)" />
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<td><input id="txtNome" placeholder="nome della fase..." ></td>
+					<td><input id="txtCosto" type="number" placeholder="giorni..." ></td>
+					<td><button onclick="pulsantePremuto(progetto2)">aggiungi</button></td>
+				</tr>
+			</thead>
+			<tbody id="fasi">
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan=3 id="totale"></td>
+				</tr>
+			</tfoot>
+		</table>
+		
+		<script>
+			var mensilità = 13;
+			var giorniLavorativi = 160; // 160/210 => 2/3
+			var tasse = 0.46; // 0.46 + 0.54 = 1
+			
+			function costoGiornaliero(stipendio = 1400){
+				return ((stipendio * mensilità)/(1-tasse))/giorniLavorativi;
+			}
+			
+			var progetto1 = 
+			[
+				{ nome : "progettazione", costo: 1 }, 				// 0
+				{ nome : "preventivi", costo: 1, prima : 0 }, 		// 1
+				{ nome : "rilievo", costo: 2, prima : 0 },			// 2
+				{ nome : "back-office", costo: 1, prima : 0 },		// 3
+				{ nome : "installazione", costo: 2, prima : [1, 2]},// 4
+				{ nome : "presentazione", costo: 1, prima : [4, 3] }// 5
+			];
+			var progetto2 = [];
+			
+			function Scontrino(progetto){
+				console.clear();
+				var totaleProgetto = 0;
+				
+				var n = 0;
+				while(n < progetto.length){
+					var fase = progetto[n];
+					var costoFase = fase.costo * costoGiornaliero;
+					totaleProgetto = totaleProgetto + costoFase;
+					console.log(fase.nome + " : €" + costoFase);
+					n = n +1;
+				}
+				console.log("----------------");
+				console.log("Totale: €" + totaleProgetto);
+			}
+			
+			function AggiungiFase(progetto, titolo, durata){
+				progetto.push( 
+								{ nome: titolo, costo: durata } 
+							);
+			}
+			
+			function AggiornaTabella(progetto){
+				var stipendio = document.getElementById("txtStipendio").value;
+				var buffer = "";
+				var n = 0;
+				var totale = 0;
+				while(n < progetto.length){
+					var fase = progetto[n];
+					var costoFase = parseInt(fase.costo * costoGiornaliero(stipendio));
+					totale += costoFase;
+					buffer += "<tr>";
+						buffer += "<td>" + fase.nome + "</td>";
+						buffer += "<td>" + fase.costo + "</td>";
+						buffer += "<td>€" + costoFase + "</td>";
+					buffer += "</tr>";
+					n = n +1 ;
+				}
+				document.getElementById("fasi").innerHTML = buffer;
+				document.getElementById("totale").innerHTML = "€" + totale;
+			}
+			
+			function pulsantePremuto(progetto){
+				// inserisco la fase
+				var txtNome = document.getElementById("txtNome");
+				var txtCosto = document.getElementById("txtCosto");
+				AggiungiFase(progetto, txtNome.value, txtCosto.value);
+				// aggiorno lo schermo
+				AggiornaTabella(progetto);
+			}
+		</script>
+		
+	</body>
+</html>
