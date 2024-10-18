@@ -1,0 +1,180 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			body {
+				background-color: beige;
+				margin: 0;
+				padding: 0;
+				font-family: system-ui;
+			}
+			
+			h1 {
+				background-color: cadetblue;
+				padding: 10px;
+			}
+			
+			p {
+				padding: 10px;
+			}
+		
+			table {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>PERT</h1>
+		<p>calcolatrice di costi di progetto basata sulla Project Evaluation and Review Technique</p>
+		<p>
+			Stipendio atteso<input id="txtStipendio" type="number" value="1400" onchange="AggiornaTabella(progetto2)" />
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th><input id="txtNome" placeholder="nome della fase..." ></th>
+					<th><input id="txtCosto" type="number" placeholder="giorni..." ></th>
+					<th><input id="txtPrecedenti" placeholder="fasi precedenti" ></th>
+					<th>da</th>
+					<th>a</th>
+					<th><button onclick="pulsantePremuto(progetto2)">aggiungi</button></th>
+				</tr>
+			</thead>
+			<tbody id="fasi">
+			</tbody>
+			<tfoot>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th id="consegna"></th>
+					<th id="totale"></th>
+				</tr>
+			</tfoot>
+		</table>
+		
+		<script>
+			var mensilità = 13;
+			var giorniLavorativi = 160; // 160/210 => 2/3
+			var tasse = 0.46; // 0.46 + 0.54 = 1
+			
+			function costoGiornaliero(stipendio = 1400){
+				return ((stipendio * mensilità)/(1-tasse))/giorniLavorativi;
+			}
+			
+			var progetto1 = 
+			[
+				{ nome : "progettazione", costo: 1, prima : [] },	// 0
+				{ nome : "preventivi", costo: 1, prima : [0] },		// 1
+				{ nome : "rilievo", costo: 2, prima : [0] },		// 2
+				{ nome : "back-office", costo: 1, prima : [0] },	// 3
+				{ nome : "installazione", costo: 2, prima : [1, 2]},// 4
+				{ nome : "presentazione", costo: 1, prima : [4, 3] }// 5
+			];
+			// presentazione finisce quando finisce installazione
+			// + il suo tempo di lavorazione
+			var progetto2 = [];
+			
+			function Scontrino(progetto){
+				console.clear();
+				var totaleProgetto = 0;
+				
+				var n = 0;
+				while(n < progetto.length){
+					var fase = progetto[n];
+					var costoFase = fase.costo * costoGiornaliero;
+					totaleProgetto = totaleProgetto + costoFase;
+					console.log(fase.nome + " : €" + costoFase);
+					n = n +1;
+				}
+				console.log("----------------");
+				console.log("Totale: €" + totaleProgetto);
+			}
+			
+			function AggiungiFase(progetto, titolo, durata, precedenti){
+				// ottengo le fasi precedenti				
+				var fasi;
+				if(precedenti == ""){
+					fasi = [];
+				} else {
+					fasi = precedenti.split(",");
+				}
+				// e le gestisco
+				var inizioFase = 0;
+				if(fasi == []){
+					inizioFase = 0;
+				} else {
+					// inizioFase = la fine (inizio + durata)
+					// maggiore tra chi mi precede
+					var n = 0;
+					while(n < fasi.length){
+						var indice = parseInt( fasi[n] ); // "3" o "4"
+						var fasePrecedente = progetto[indice];
+						var fineFase = fasePrecedente.inizio + fasePrecedente.costo;
+						if(fineFase > inizioFase){
+							inizioFase = fineFase;
+						}
+						n = n + 1;
+					}
+				}
+				// aggiungo la nuova fase al progetto
+				progetto.push( 
+								{ 
+									nome: titolo, 
+									costo: parseInt(durata), 
+									prima: fasi,
+									inizio: inizioFase
+								} 
+							);
+			}
+			
+			function AggiornaTabella(progetto){
+				var stipendio = document.getElementById("txtStipendio").value;
+				var buffer = "";
+				var n = 0;
+				var totale = 0;
+				var consegna = 0;
+				while(n < progetto.length){
+					var fase = progetto[n];
+					var costoFase = parseInt(fase.costo * costoGiornaliero(stipendio));
+					var fine = fase.inizio + fase.costo;
+					if(consegna < fine){
+						consegna = fine;
+					}
+					totale += costoFase;
+					buffer += "<tr>";
+						buffer += "<td>" + n + "</td>";
+						buffer += "<td>" + fase.nome + "</td>";
+						buffer += "<td>" + fase.costo + "</td>";
+						buffer += "<td>" + fase.prima + "</td>";
+						buffer += "<td>" + fase.inizio + "</td>";
+						buffer += "<td>" + (fase.inizio + fase.costo) + "</td>";
+						buffer += "<td>€" + costoFase + "</td>";
+					buffer += "</tr>";
+					n = n +1 ;
+				}
+				document.getElementById("consegna").innerHTML = consegna;
+				document.getElementById("fasi").innerHTML = buffer;
+				document.getElementById("totale").innerHTML = "€" + totale;
+			}
+			
+			function pulsantePremuto(progetto){
+				// connetto i campi
+				var txtNome = document.getElementById("txtNome");
+				var txtCosto = document.getElementById("txtCosto");
+				var txtPrecedenti = document.getElementById("txtPrecedenti");
+				// ed aggiungo la fase
+				AggiungiFase(progetto, 
+								txtNome.value, 
+								txtCosto.value, 
+								txtPrecedenti.value);
+				// aggiorno lo schermo
+				AggiornaTabella(progetto);
+			}
+		</script>
+		
+	</body>
+</html>
