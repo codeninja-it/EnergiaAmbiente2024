@@ -1,42 +1,101 @@
 <html>
+	<head>
+		<title>Conway's game of life</title>
+		<style>
+			body {
+				font-family: Arial;
+				margin: 0;
+				background-color: aliceblue;
+				overflow: hidden;
+			}
+			
+			h1 {
+				background-color: white;
+				padding: 10px;
+				box-shadow: 0px -2px 5px #00000066 inset;
+			}
+			
+			p {
+				padding: 5px;
+			}
+			
+			canvas {
+				border-radius: 500000px;
+				box-shadow: 2px 2px 5px #00000066;
+				margin: 10px;
+			}
+			
+			div {
+				background-color: white;
+				text-align: center;
+				padding: 15px;
+				box-shadow: 0 2px 5px #00000066 inset;
+				height: 200px;
+			}
+		</style>
+	</head>
 	<body>
-		<canvas id="lavagna"></canvas>
+		<h1>Conway's game of life</h1>
+		<p>primo esempio storico di un digital-twin basato sull'evoluzionismo darwiniano</p>
+		<p align="center">
+			<canvas id="lavagna"></canvas><br>
+			<progress value=0 min=0 max=1000 id="stato"></progress><br>
+		</p>
+		<div>
+			<button onclick="Inizializza()">nuovo vetrino</button>
+		</div>
 		<script>
 			// definisco una griglia
 			var griglia = [];
-			var lato = 50;
+			var lato = 250;
+			var numeroVivi = 0;
+			var sogliaVivi = 0.07;
 			
 			function Inizializza(){
+				numeroVivi = 0;
 				for(var x=0; x < lato; x++){
 					griglia[x] = [];
 					for(var y=0; y < lato; y++){
 						if(x == 0 || y == 0 || x == lato || y == lato){
 							griglia[x][y] = 0;
 						} else {
-							var valore = parseInt( Math.random() * 2 );
+							var valore = Math.random();
+							if(valore < sogliaVivi){
+								valore = 1;
+							} else {
+								valore = 0;
+							}
 							griglia[x][y] = valore;
+							numeroVivi += valore;
 						}
 					}
 				}
+				var stato = document.getElementById("stato");
+				stato.value = numeroVivi;
+				stato.max = lato * lato;
 			}
 			
 			function Ridisegna(){
 				var riferimento = document.getElementById("lavagna");
-				riferimento.width = 1000;
-				riferimento.height = 1000;
+				riferimento.width = lato;
+				riferimento.height = lato;
 				var penna = riferimento.getContext("2d");
+				numeroVivi = 0;
 				for(var x=0; x < lato; x++){
 					for(var y=0; y < lato; y++){
 						if(griglia[x][y] == 1){
 							// coloro di verde
-							penna.fillStyle = "green";
+							penna.fillStyle = "#00CC0088";
+							numeroVivi++;
 						} else {
 							// color di nero
-							penna.fillStyle = "black";
+							penna.fillStyle = "#9fb8ce";
 						}
 						penna.fillRect(x, y, 1, 1);
 					}
 				}
+				var stato = document.getElementById("stato");
+				stato.value = numeroVivi;
 			}
 			
 			function Analizza(){
@@ -83,7 +142,7 @@
 			// analizzo e modifico la griglia
 			
 			// ripeto per sempre il ciclo del mio programma di analisi
-			setInterval(ciclo, 100);
+			setInterval(ciclo, 10);
 			
 		</script>
 	</body>
