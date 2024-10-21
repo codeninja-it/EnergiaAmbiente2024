@@ -1,0 +1,90 @@
+<html>
+	<body>
+		<canvas id="lavagna"></canvas>
+		<script>
+			// definisco una griglia
+			var griglia = [];
+			var lato = 50;
+			
+			function Inizializza(){
+				for(var x=0; x < lato; x++){
+					griglia[x] = [];
+					for(var y=0; y < lato; y++){
+						if(x == 0 || y == 0 || x == lato || y == lato){
+							griglia[x][y] = 0;
+						} else {
+							var valore = parseInt( Math.random() * 2 );
+							griglia[x][y] = valore;
+						}
+					}
+				}
+			}
+			
+			function Ridisegna(){
+				var riferimento = document.getElementById("lavagna");
+				riferimento.width = 1000;
+				riferimento.height = 1000;
+				var penna = riferimento.getContext("2d");
+				for(var x=0; x < lato; x++){
+					for(var y=0; y < lato; y++){
+						if(griglia[x][y] == 1){
+							// coloro di verde
+							penna.fillStyle = "green";
+						} else {
+							// color di nero
+							penna.fillStyle = "black";
+						}
+						penna.fillRect(x, y, 1, 1);
+					}
+				}
+			}
+			
+			function Analizza(){
+				var copia = griglia;
+				for(var x=1; x < lato-1; x++){
+					for(var y=1; y < lato-1; y++){
+						var cella = griglia[x][y];
+						var vicini = 	griglia[x-1][y-1]	+
+										griglia[x][y-1] 	+
+										griglia[x+1][y-1]	+
+										
+										griglia[x-1][y]		+
+										griglia[x+1][y]		+
+										
+										griglia[x-1][y+1]	+
+										griglia[x][y+1]		+
+										griglia[x+1][y+1];
+						var nuovoValore = 0;
+						if(cella == 1 && vicini < 2){ // sottopopolazione
+							nuovoValore = 0;
+						} else if(cella == 1 && vicini == 2){ // sopravvivenza
+							nuovoValore = 1;
+						} else if(cella == 1 && vicini > 3){ // sovrappopolazione
+							nuovoValore = 0;
+						} else if(vicini == 3){ // riproduzione
+							nuovoValore = 1;
+						}
+						copia[x][y] = nuovoValore;
+					}
+				}
+				griglia = copia;
+			}
+			
+			function ciclo(){
+				// analizzo chi sopravvive
+				Analizza();
+				// ed aggiorno lo schermo
+				Ridisegna();
+			}
+			
+			
+			// prima valorizzo la nostra griglia
+			Inizializza();
+			// analizzo e modifico la griglia
+			
+			// ripeto per sempre il ciclo del mio programma di analisi
+			setInterval(ciclo, 100);
+			
+		</script>
+	</body>
+</html>
